@@ -54,6 +54,7 @@ public class GamePanel extends JPanel implements Runnable {
         paddle1.draw(g);
         paddle2.draw(g);
         ball.draw(g);
+        score.draw(g);
     }
 
     public void move() {
@@ -63,13 +64,14 @@ public class GamePanel extends JPanel implements Runnable {
     }
     public void checkCollision() {
         //check collision for paddles and walls
+        //paddle1 collision
         if(paddle1.y <= 0) {
             paddle1.y = 0;
         }
         if(paddle1.y >= GAME_HEIGHT - PADDLE_HEIGHT) {
             paddle1.y = GAME_HEIGHT - PADDLE_HEIGHT;
         }
-
+        //paddle2 collision
         if(paddle2.y <= 0) {
             paddle2.y = 0;
         }
@@ -82,9 +84,10 @@ public class GamePanel extends JPanel implements Runnable {
             ball.setYDirection(-ball.yVelocity);
         }
         if(ball.y >= GAME_HEIGHT - BALL_DIAMETER) {
-            ball.setYDirection(ball.yVelocity);
+            ball.setYDirection(-ball.yVelocity);
         }
 
+        //check collision for ball and paddle
         if(ball.intersects(paddle1)) {
            ball.xVelocity = Math.abs(ball.xVelocity);
            ball.xVelocity++;
@@ -107,6 +110,21 @@ public class GamePanel extends JPanel implements Runnable {
             }
             ball.setXDirection(-ball.xVelocity);
             ball.setYDirection(ball.yVelocity);
+        }
+
+        //scoring points
+        if(ball.x <= 0) {
+            score.player2++;
+            newPaddles();
+            newBall();
+            System.out.println("Player 2: " + score.player2);
+        }
+
+        if(ball.x >= GAME_WIDTH - BALL_DIAMETER) {
+            score.player1++;
+            newPaddles();
+            newBall();
+            System.out.println("Player 1: " + score.player1);
         }
     }
 
